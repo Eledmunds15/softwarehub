@@ -28,6 +28,7 @@ if [[ "$MODE" == "hpc" ]]; then
     module load FFTW/3.3.10-GCC-12.2.0
     module load OpenBLAS/0.3.21-GCC-12.2.0
     module load CUDA/12.4.0
+    module load CMake/3.24.3-GCCcore-12.2.0
 fi
 
 # ─── Compilers ───────────────────────────────────────────────────────────────
