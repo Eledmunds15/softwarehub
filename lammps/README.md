@@ -155,6 +155,8 @@ python in.py
 
 module use $HOME/modulefiles
 module load LAMMPS
+eval "$(conda shell.bash hook)"
+conda activate LAMMPS
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
@@ -173,6 +175,8 @@ or
 
 module use $HOME/modulefiles
 module load LAMMPS
+eval "$(conda shell.bash hook)"
+conda activate LAMMPS
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 

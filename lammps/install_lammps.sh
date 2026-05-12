@@ -61,6 +61,8 @@ if ! conda env list | grep -q "^${ENV_NAME} "; then
     conda create -n "${ENV_NAME}" python="${PYTHON_VERSION}" -y
 fi
 conda activate "${ENV_NAME}"
+LAMMPS_PYTHON="$(which python)"
+LAMMPS_CONDA_BIN="$(dirname "${LAMMPS_PYTHON}")"
 
 # ─── Clone LAMMPS ────────────────────────────────────────────────────────────
 if [[ ! -d "${LAMMPS_SRC}/.git" ]]; then
@@ -98,7 +100,7 @@ conda install -y -c conda-forge \
     numpy pandas matplotlib scipy \
     ase matscipy atomman seaborn
 
-pip install mpi4py --no-binary mpi4py
+MPICC=$(which mpicc) python -m pip install mpi4py --no-binary mpi4py
 
 # ─── HPC: write modulefile ───────────────────────────────────────────────────
 if [[ "$MODE" == "hpc" ]]; then
@@ -120,17 +122,15 @@ load("OpenMPI/4.1.4-GCC-12.2.0")
 load("FFTW/3.3.10-GCC-12.2.0")
 load("OpenBLAS/0.3.21-GCC-12.2.0")
 load("CUDA/12.4.0")
+load("Anaconda3/2022.05")
 
 -- ─── Paths ───────────────────────────────────────────────────────────────────
-local HOME        = os.getenv("HOME")
-local CONDA_ROOT  = "${CONDA_ROOT}"
-local ENV_NAME    = "${ENV_NAME}"
-local LMP_ROOT    = "${INSTALL_PREFIX}"
-local LMP_BUILD   = pathJoin("${LAMMPS_SRC}", "build")
-local LMP_PY      = pathJoin("${LAMMPS_SRC}", "python")
+local LMP_ROOT  = "${INSTALL_PREFIX}"
+local LMP_BUILD = "${LAMMPS_SRC}/build"
+local LMP_PY    = "${LAMMPS_SRC}/python"
 
 -- ─── Environment ─────────────────────────────────────────────────────────────
-prepend_path("PATH",            pathJoin(CONDA_ROOT, ".envs", ENV_NAME, "bin"))
+prepend_path("PATH",            "${LAMMPS_CONDA_BIN}")
 prepend_path("PATH",            pathJoin(LMP_ROOT, "bin"))
 prepend_path("LD_LIBRARY_PATH", LMP_BUILD)
 prepend_path("PYTHONPATH",      LMP_PY)
