@@ -69,7 +69,8 @@ cd "${LAMMPS_SRC}" && mkdir -p build && cd build
 
 # ─── CMake ───────────────────────────────────────────────────────────────────
 cmake_args=(
-    ../cmake
+    -S ../cmake
+    -B .
     -C ../cmake/presets/most.cmake
     -DBUILD_MPI=ON
     -DBUILD_SHARED_LIBS=ON
