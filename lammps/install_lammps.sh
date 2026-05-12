@@ -44,8 +44,8 @@ export OMPI_CC="${CC}"
 export OMPI_CXX="${CXX}"
 
 if [[ "$MODE" == "hpc" ]]; then
-    INSTALL_PREFIX="${INSTALL_DIR:-${HOME}/.local}"
-    LAMMPS_SRC="${INSTALL_PREFIX}/lammps/src"
+    LAMMPS_SRC="${INSTALL_DIR:-${HOME}/lammps}"
+    INSTALL_PREFIX="${HOME}/.local"
 else
     LAMMPS_SRC="${INSTALL_DIR:-$(pwd)/lammps}"
     INSTALL_PREFIX=""
@@ -71,22 +71,20 @@ cd "${LAMMPS_SRC}" && mkdir -p build && cd build
 cmake_args=(
     ../cmake
     -C ../cmake/presets/most.cmake
-    -D BUILD_MPI=ON
-    -D BUILD_SHARED_LIBS=ON
-    -D BUILD_OMP=ON
-    -D PKG_PYTHON=ON
-    -D PKG_REPLICA=ON
-    -D PKG_RIGID=ON
-    -D PKG_MANYBODY=ON
-    -D PYTHON_EXECUTABLE="$(which python)"
-    -D CMAKE_C_COMPILER="${CC}"
-    -D CMAKE_CXX_COMPILER="${MPI_CXX}"
+    -DBUILD_MPI=ON
+    -DBUILD_SHARED_LIBS=ON
+    -DBUILD_OMP=ON
+    -DPKG_PYTHON=ON
+    -DPKG_REPLICA=ON
+    -DPKG_RIGID=ON
+    -DPKG_MANYBODY=ON
+    "-DPYTHON_EXECUTABLE=$(which python)"
+    "-DCMAKE_C_COMPILER=${CC}"
+    "-DCMAKE_CXX_COMPILER=${MPI_CXX}"
 )
 
 if [[ "$MODE" == "hpc" ]]; then
-    cmake_args+=(
-        -D CMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}"
-    )
+    cmake_args+=( "-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}" )
 fi
 
 cmake "${cmake_args[@]}"
