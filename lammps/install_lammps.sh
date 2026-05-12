@@ -120,7 +120,6 @@ load("OpenMPI/4.1.4-GCC-12.2.0")
 load("FFTW/3.3.10-GCC-12.2.0")
 load("OpenBLAS/0.3.21-GCC-12.2.0")
 load("CUDA/12.4.0")
-load("Anaconda3/2022.05")
 
 -- ─── Paths ───────────────────────────────────────────────────────────────────
 local HOME        = os.getenv("HOME")
