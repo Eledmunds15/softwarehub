@@ -70,18 +70,18 @@ cd "${LAMMPS_SRC}" && mkdir -p build && cd build
 
 # ─── CMake ───────────────────────────────────────────────────────────────────
 cmake ../cmake \
-  -C ../cmake/presets/most.cmake \
-  -D BUILD_MPI=ON \
-  -D BUILD_SHARED_LIBS=ON \
-  -D PKG_REPLICA=ON \
-  -D PKG_RIGID=ON \
-  -D PKG_MANYBODY=ON \
-  -D BUILD_OMP=ON \
-  -D PKG_PYTHON=ON \
-  -D PYTHON_EXECUTABLE="/mnt/parscratch/users/mtp24ele/anaconda/.envs/atom_sims/bin/python" \
-  -D CMAKE_C_COMPILER="/opt/apps/testapps/el7/software/staging/GCCcore/12.2.0/bin/gcc" \
-  -D CMAKE_CXX_COMPILER="/opt/apps/testapps/el7/software/staging/OpenMPI/4.1.4-GCC-12.2.0/bin/mpicxx" \
-  ../cmake
+    -C ../cmake/presets/most.cmake \
+    -D BUILD_MPI=ON \
+    -D BUILD_SHARED_LIBS=ON \
+    -D BUILD_OMP=ON \
+    -D PKG_PYTHON=ON \
+    -D PKG_REPLICA=ON \
+    -D PKG_RIGID=ON \
+    -D PKG_MANYBODY=ON \
+    -D PYTHON_EXECUTABLE="$(which python)" \
+    -D CMAKE_C_COMPILER="${CC}" \
+    -D CMAKE_CXX_COMPILER="${MPI_CXX}" \
+    ../cmake
 
 # ─── Build & install ─────────────────────────────────────────────────────────
 make -j"${NPROC}"
