@@ -28,6 +28,23 @@ bash install_lammps.sh --hpc   [--install-dir PATH]
 
 ---
 
+## Local prerequisites
+
+Install the required system packages on Ubuntu/Debian before running the script:
+
+```bash
+sudo apt update && sudo apt install -y \
+    build-essential \
+    gcc g++ \
+    cmake \
+    openmpi-bin libopenmpi-dev \
+    git
+```
+
+The script uses the system compilers at `/usr/bin/gcc`, `/usr/bin/g++`, and `/usr/bin/mpicxx`. These are provided by `build-essential`, `g++`, and `libopenmpi-dev` respectively.
+
+---
+
 ## What the script does
 
 1. **Loads system modules** (`--hpc` only)
@@ -108,4 +125,63 @@ Verify the installation in either mode:
 ```bash
 lmp -help
 python -c "import lammps; print('OK')"
+```
+
+## How to run simulations
+
+### Local
+
+```bash
+conda activate LAMMPS
+lmp -in in.script
+```
+
+or
+
+```bash
+conda activate LAMMPS
+python in.py
+```
+
+### HPC (SLURM batch script)
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=my_lammps_job
+#SBATCH --ntasks=32
+#SBATCH --mem=16G
+#SBATCH --time=01:00:00
+#SBATCH --output=slurm-%j.out
+
+module use $HOME/modulefiles
+module load LAMMPS
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+srun --export=ALL lmp -in in.script
+```
+
+or
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=my_lammps_job
+#SBATCH --ntasks=32
+#SBATCH --mem=16G
+#SBATCH --time=01:00:00
+#SBATCH --output=slurm-%j.out
+
+module use $HOME/modulefiles
+module load LAMMPS
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+srun --export=ALL python in.py
+```
+
+
+Submit with:
+
+```bash
+sbatch job.sh
 ```
