@@ -68,27 +68,19 @@ fi
 cd "${LAMMPS_SRC}" && mkdir -p build && cd build
 
 # ─── CMake ───────────────────────────────────────────────────────────────────
-cmake_args=(
-    -S ../cmake
-    -B .
-    -C ../cmake/presets/most.cmake
-    -DBUILD_MPI=ON
-    -DBUILD_SHARED_LIBS=ON
-    -DBUILD_OMP=ON
-    -DPKG_PYTHON=ON
-    -DPKG_REPLICA=ON
-    -DPKG_RIGID=ON
-    -DPKG_MANYBODY=ON
-    "-DPYTHON_EXECUTABLE=$(which python)"
-    "-DCMAKE_C_COMPILER=${CC}"
-    "-DCMAKE_CXX_COMPILER=${MPI_CXX}"
-)
-
-if [[ "$MODE" == "hpc" ]]; then
-    cmake_args+=( "-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}" )
-fi
-
-cmake "${cmake_args[@]}"
+cmake ../cmake \
+  -C ../cmake/presets/most.cmake \
+  -D BUILD_MPI=ON \
+  -D BUILD_SHARED_LIBS=ON \
+  -D PKG_REPLICA=ON \
+  -D PKG_RIGID=ON \
+  -D PKG_MANYBODY=ON \
+  -D BUILD_OMP=ON \
+  -D PKG_PYTHON=ON \
+  -D PYTHON_EXECUTABLE="/mnt/parscratch/users/mtp24ele/anaconda/.envs/atom_sims/bin/python" \
+  -D CMAKE_C_COMPILER="/opt/apps/testapps/el7/software/staging/GCCcore/12.2.0/bin/gcc" \
+  -D CMAKE_CXX_COMPILER="/opt/apps/testapps/el7/software/staging/OpenMPI/4.1.4-GCC-12.2.0/bin/mpicxx" \
+  ../cmake
 
 # ─── Build & install ─────────────────────────────────────────────────────────
 make -j"${NPROC}"
